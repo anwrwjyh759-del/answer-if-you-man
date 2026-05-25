@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة النيون</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #ff0033;
+  padding-bottom: 20px;
+  box-shadow: 0 0 20px #ff0033;
+}
+
+h1 {
+  color: #ff0033;
+  font-size: 2.5rem;
+  text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0033, 0 0 40px #ff0033;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+ 0%, 100% { text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0033, 0 0 40px #ff0033; }
+ 50% { text-shadow: 0 0 20px #ff0033, 0 0 30px #ff0033, 0 0 60px #ff0033; }
+}
+
+.score-bar {
+  background: #111;
+  border: 2px solid #ff0033;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 0 15px #ff0033;
+}
+
+.score-bar span {
+  color: #ff0033;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.question-box {
+  background: #111;
+  border: 2px solid #ff0033;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 25px rgba(255, 0, 51, 0.5);
+}
+
+.question-num {
+  color: #ff0033;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.options {
+  display: grid;
+  gap: 12px;
+}
+
+.option {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.1rem;
+}
+
+.option:hover {
+  border-color: #ff0033;
+  box-shadow: 0 0 15px #ff0033;
+  transform: translateX(-5px);
+}
+
+.option.selected {
+  background: #ff0033;
+  border-color: #ff0033;
+  box-shadow: 0 0 20px #ff0033;
+}
+
+.option.correct {
+  background: #00ff66;
+  border-color: #00ff66;
+  box-shadow: 0 0 20px #00ff66;
+}
+
+.option.wrong {
+  background: #ff0033;
+  border-color: #ff0033;
+}
+
+.choice-card,.gold-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  border: 3px solid #ff0033;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 40px #ff0033;
+  z-index: 100;
+  display: none;
+}
+
+.gold-card {
+  border-color: #FFD700;
+  box-shadow: 0 0 50px #FFD700, 0 0 100px #FFD700;
+  background: linear-gradient(135deg, #111, #2a2200);
+}
+
+.gold-card h2 {
+  color: #FFD700;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700;
+  animation: goldGlow 2s ease-in-out infinite;
+}
+
+@keyframes goldGlow {
+ 0%, 100% { text-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700; }
+ 50% { text-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, 0 0 80px #FFD700; }
+}
+
+.choice-card h2 {
+  color: #ff0033;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px #ff0033;
+}
+
+.choice-card p,.gold-card p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.btn {
+  background: #ff0033;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px #ff0033;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px #ff0033, 0 0 50px #ff0033;
+}
+
+.btn-secondary {
+  background: #333;
+  color: #fff;
+  box-shadow: 0 0 15px #333;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #000;
+  box-shadow: 0 0 30px #FFD700;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 99;
+  display: none;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff0033, #ff6600);
+  box-shadow: 0 0 15px #ff0033;
+  transition: width 0.5s;
+  width: 0%;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+.question-text { font-size: 1.2rem; }
+.choice-card,.gold-card { padding: 25px; width: 90%; }
+}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay"></div>
+
+<div class="container">
+  <div class="header">
+    <h1>مسابقة النيون</h1>
+  </div>
+
+  <div class="score-bar">
+    <span>السؤال: <span id="qNum">1</span>/2000</span>
+    <span>السكور: <span id="score">0</span></span>
+    <span>المستوى: <span id="level">سهل</span></span>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+
+  <div id="quizArea">
+    <div class="question-box">
+      <div class="question-num">سؤال <span id="currentQ">1</span></div>
+      <div class="question-text" id="question">جاري التحميل...</div>
+      <div class="options" id="options"></div>
+    </div>
+  </div>
+</div>
+
+<div class="choice-card" id="choiceCard">
+  <h2>استراحة سريعة!</h2>
+  <p>خلصت 10 أسئلة<br>السكور الحالي: <span id="breakScore">0</span></p>
+  <button class="btn" onclick="continueQuiz()">أتابع</button>
+  <button class="btn btn-secondary" onclick="stopQuiz()">أتوقف</button>
+</div>
+
+<div class="gold-card" id="goldCard">
+  <h2>🏆 مبروك 🏆</h2>
+  <p>انت اذكى العباقره في العالم<br>السكور النهائي: <span id="finalScore">0</span>/2000</p>
+  <button class="btn btn-gold" onclick="restart()">إعادة المحاولة</button>
+</div>
+
+<script src="questions.js"></script>
+<script>
+let currentQIndex = 0;
+let score = 0;
+let answered = false;
+
+// دالة لخلط المصفوفة عشوائياً - Fisher-Yates Shuffle
+function shuffleArray(array) {
+  let currentIndex = array.length, randomIndex;
+
+  while (currentIndex!== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
+// لخبط الأسئلة أول ما الصفحة تفتح
+shuffleArray(questions);
+
+function loadQuestion() {
+  if(currentQIndex >= questions.length) {
+    showGoldCard();
+    return;
+  }
+
+  answered = false;
+  const q = questions[currentQIndex];
+
+  document.getElementById('qNum').textContent = currentQIndex + 1;
+  document.getElementById('currentQ').textContent = currentQIndex + 1;
+  document.getElementById('question').textContent = q.q;
+  document.getElementById('level').textContent = q.difficulty;
+  document.getElementById('progress').style.width = ((currentQIndex / questions.length) * 100) + '%';
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+
+  q.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.textContent = opt;
+    div.onclick = () => selectAnswer(idx);
+    optionsDiv.appendChild(div);
+  });
+}
+
+function selectAnswer(idx) {
+  if(answered) return;
+  answered = true;
+
+  const q = questions[currentQIndex];
+  const options = document.querySelectorAll('.option');
+
+  options.forEach((opt, i) => {
+    opt.onclick = null;
+    if(i === q.answer) opt.classList.add('correct');
+    else if(i === idx) opt.classList.add('wrong');
+  });
+
+  if(idx === q.answer) score++;
+  document.getElementById('score').textContent = score;
+
+  setTimeout(() => {
+    currentQIndex++;
+
+    if(currentQIndex % 10 === 0 && currentQIndex < questions.length) {
+      showChoiceCard();
+    } else {
+      loadQuestion();
+    }
+  }, 1500);
+}
+
+function showChoiceCard() {
+  document.getElementById('breakScore').textContent = score;
+  document.getElementById('choiceCard').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+function continueQuiz() {
+  document.getElementById('choiceCard').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+  loadQuestion();
+}
+
+function stopQuiz() {
+  showGoldCard();
+}
+
+function showGoldCard() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('goldCard').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+function restart() {
+  currentQIndex = 0;
+  score = 0;
+  // لخبط الأسئلة تاني لما يعيد
+  shuffleArray(questions);
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('goldCard').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('score').textContent = 0;
+  loadQuestion();
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
