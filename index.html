@@ -23,24 +23,24 @@ h1{color:#ff0033;font-size:2.5rem;text-shadow:0 0 10px #ff0033,0 0 20px #ff0033,
 .option.selected{background:#ff0033;border-color:#ff0033;box-shadow:0 0 20px #ff0033;}
 .option.correct{background:#00ff66;border-color:#00ff66;box-shadow:0 0 20px #00ff66;}
 .option.wrong{background:#ff0033;border-color:#ff0033;}
-.choice-card,.gold-card,.locked-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111;border:3px solid #ff0033;border-radius:20px;padding:40px;text-align:center;box-shadow:0 0 40px #ff0033;z-index:100;display:none;}
-.locked-card{border-color:#555;box-shadow:0 0 30px #555;background:#0a0a0a;}
-.locked-card h2{color:#aaa;font-size:2.2rem;margin-bottom:20px;}
-.locked-card p{font-size:1.2rem;margin-bottom:30px;color:#888;}
+.choice-card,.gold-card,.reward-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111;border:3px solid #ff0033;border-radius:20px;padding:40px;text-align:center;box-shadow:0 0 40px #ff0033;z-index:100;display:none;}
+.reward-card{border-color:#ff0033;background:linear-gradient(135deg,#111,#330000);box-shadow:0 0 50px #ff0033,0 0 100px #ff0033;}
+.reward-card h2{color:#ff0033;font-size:2.5rem;margin-bottom:20px;text-shadow:0 0 20px #ff0033,0 0 40px #ff0033;animation:glow 2s ease-in-out infinite;}
 .gold-card{border-color:#FFD700;box-shadow:0 0 50px #FFD700,0 0 100px #FFD700;background:linear-gradient(135deg,#111,#2a2200);}
 .gold-card h2{color:#FFD700;font-size:2.5rem;margin-bottom:20px;text-shadow:0 0 20px #FFD700,0 0 40px #FFD700;animation:goldGlow 2s ease-in-out infinite;}
 @keyframes goldGlow{0%,100%{text-shadow:0 0 20px #FFD700,0 0 40px #FFD700;}50%{text-shadow:0 0 30px #FFD700,0 0 60px #FFD700,0 0 80px #FFD700;}}
 .choice-card h2{color:#ff0033;font-size:2rem;margin-bottom:20px;text-shadow:0 0 15px #ff0033;}
-.choice-card p,.gold-card p,.locked-card p{font-size:1.2rem;margin-bottom:30px;}
-.btn{background:#ff0033;color:#000;border:none;padding:15px 40px;font-size:1.2rem;font-weight:900;border-radius:10px;cursor:pointer;margin:0 10px;transition:all 0.3s;box-shadow:0 0 20px #ff0033;}
+.choice-card p,.gold-card p,.reward-card p{font-size:1.2rem;margin-bottom:30px;}
+.link-box{background:#000;border:2px dashed #ff0033;padding:15px;margin:20px 0;border-radius:10px;word-break:break-all;color:#ff0033;font-weight:700;}
+.link-box a{color:#ff0033;text-decoration:none;}
+.btn{background:#ff0033;color:#000;border:none;padding:15px 40px;font-size:1.2rem;font-weight:900;border-radius:10px;cursor:pointer;margin:10px;transition:all 0.3s;box-shadow:0 0 20px #ff0033;}
 .btn:hover{transform:scale(1.1);box-shadow:0 0 30px #ff0033,0 0 50px #ff0033;}
 .btn-secondary{background:#333;color:#fff;box-shadow:0 0 15px #333;}
 .btn-gold{background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;box-shadow:0 0 30px #FFD700;}
-.btn-locked{background:#555;color:#aaa;box-shadow:0 0 15px #555;cursor:pointer;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:99;display:none;}
 .progress-bar{width:100%;height:8px;background:#333;border-radius:10px;overflow:hidden;margin-bottom:20px;}
 .progress-fill{height:100%;background:linear-gradient(90deg,#ff0033,#ff6600);box-shadow:0 0 15px #ff0033;transition:width 0.5s;width:0%;}
-@media(max-width:600px){h1{font-size:1.8rem;}.question-text{font-size:1.2rem;}.choice-card,.gold-card,.locked-card{padding:25px;width:90%;}}
+@media(max-width:600px){h1{font-size:1.8rem;}.question-text{font-size:1.2rem;}.choice-card,.gold-card,.reward-card{padding:25px;width:90%;}}
 </style>
 </head>
 <body>
@@ -73,13 +73,15 @@ h1{color:#ff0033;font-size:2.5rem;text-shadow:0 0 10px #ff0033,0 0 20px #ff0033,
 <div class="gold-card" id="goldCard">
   <h2>🏆 مبروك 🏆</h2>
   <p>انت خلصت الـ 100 سؤال<br>السكور النهائي: <span id="finalScore">0</span>/100</p>
-  <button class="btn btn-gold" onclick="showLockedBox()">افتح الصندوق</button>
+  <button class="btn btn-gold" onclick="checkPerfectScore()">افتح الصندوق</button>
 </div>
 
-<div class="locked-card" id="lockedCard">
-  <h2>🔒 صندوق مقفول</h2>
-  <p>SOON</p>
-  <button class="btn btn-locked" onclick="closeLockedBox()">تمام</button>
+<div class="reward-card" id="rewardCard">
+  <h2>🔥 أحسنت 🔥</h2>
+  <p>أنت جبت 100/100!<br>تستاهل تدخل الجزء التاني</p>
+  <div class="link-box" id="part2Link">اضغط على الزرار تحت عشان يظهر الرابط</div>
+  <button class="btn" onclick="showLink()">افتح الصندوق</button>
+  <button class="btn btn-secondary" onclick="restart()">العب تاني</button>
 </div>
 
 <script src="questions.js"></script>
@@ -88,6 +90,8 @@ let currentQIndex=0;
 let score=0;
 let answered=false;
 const TOTAL_QUESTIONS=100;
+// غير اللينك ده للينك الجزء التاني
+const PART2_LINK="https://example.com/part2";
 
 shuffleArray(questions);
 
@@ -165,23 +169,30 @@ function showGoldCard(){
   document.getElementById('goldCard').style.display='block';
   document.getElementById('overlay').style.display='block';
 }
-function showLockedBox(){
+
+function checkPerfectScore(){
   document.getElementById('goldCard').style.display='none';
-  document.getElementById('lockedCard').style.display='block';
+  if(score===TOTAL_QUESTIONS){
+    document.getElementById('rewardCard').style.display='block';
+  }else{
+    restart();
+  }
 }
-function closeLockedBox(){
-  document.getElementById('lockedCard').style.display='none';
-  document.getElementById('overlay').style.display='none';
-  restart();
+
+function showLink(){
+  document.getElementById('part2Link').innerHTML=`<a href="${PART2_LINK}" target="_blank">${PART2_LINK}</a>`;
 }
+
 function restart(){
   currentQIndex=0;
   score=0;
   shuffleArray(questions);
   document.getElementById('quizArea').style.display='block';
   document.getElementById('goldCard').style.display='none';
+  document.getElementById('rewardCard').style.display='none';
   document.getElementById('overlay').style.display='none';
   document.getElementById('score').textContent=0;
+  document.getElementById('part2Link').textContent='اضغط على الزرار تحت عشان يظهر الرابط';
   loadQuestion();
 }
 loadQuestion();
